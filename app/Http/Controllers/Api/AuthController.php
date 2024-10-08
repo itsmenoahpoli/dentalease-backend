@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\GetCodeRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\VerifyCodeRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -42,6 +43,13 @@ class AuthController extends Controller
     public function requestCode(GetCodeRequest $request) : JsonResponse
     {
         $result = $this->authService->createCode($request->validated());
+
+        return response()->json($result, Response::HTTP_OK);
+    }
+
+    public function verifyCode(VerifyCodeRequest $request) : JsonResponse
+    {
+        $result = $this->authService->verifyCode($request->validated());
 
         return response()->json($result, Response::HTTP_OK);
     }
