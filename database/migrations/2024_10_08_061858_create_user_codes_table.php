@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_codes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('code')->unique();
+            $table->boolean('is_used')->default(false);
+            $table->dateTime('expires_at')->default(now()->addHours(4));
             $table->timestamps();
         });
     }

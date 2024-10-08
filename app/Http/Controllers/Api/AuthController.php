@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\GetCodeRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
@@ -23,10 +24,25 @@ class AuthController extends Controller
         return response()->json($result, Response::HTTP_OK);
     }
 
+    public function logout(Request $request) : JsonResponse
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        return response()->json(['data' => 'Logged out successfully'], Response::HTTP_OK);
+    }
+
     public function me(Request $request) : JsonResponse
     {
         $user = $request->user();
 
         return response()->json($user, Response::HTTP_OK);
+    }
+
+    public function requestCode(GetCodeRequest $request) : JsonResponse
+    {
+        $result = $this->authService->createCode($request->validated());
+
+        return response()->json($result, Response::HTTP_OK);
     }
 }
